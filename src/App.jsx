@@ -62,16 +62,19 @@ export default function App() {
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <Navbar />
           <AppRoutes />
           <Toaster
             position="top-right"
             toastOptions={{
               style: {
-                background: '#1a1a3e',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '12px',
+                background: '#00353a',
+                color: '#f7f9ff',
+                border: '1px solid #D4AF37',
+                borderRadius: '16px',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                fontSize: '10px',
+                letterSpacing: '0.1em'
               },
             }}
           />

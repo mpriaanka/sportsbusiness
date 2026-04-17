@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
 import { bookings as bookingsAPI, payments as paymentsAPI } from '../api';
-import { GlassCard, Badge, LoadingSkeleton } from '../components/UI';
+import { GlassCard, Badge, Button, Input } from '../components/UI';
 import toast from 'react-hot-toast';
-import { FiCheck, FiClock, FiDollarSign } from 'react-icons/fi';
+import { FiCheck, FiClock, FiDollarSign, FiActivity, FiArrowLeft } from 'react-icons/fi';
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
 export default function PaymentPage() {
   const { bookingId } = useParams();
-  const { dark } = useTheme();
   const navigate = useNavigate();
   const [booking, setBooking] = useState(null);
   const [paymentsList, setPaymentsList] = useState([]);
@@ -24,7 +24,7 @@ export default function PaymentPage() {
     ]).then(([bRes, pRes]) => {
       setBooking(bRes.data);
       setPaymentsList(pRes.data);
-    }).catch(() => toast.error('Failed to load booking'))
+    }).catch(() => toast.error('Failed to load payment details'))
     .finally(() => setLoading(false));
   };
 
@@ -39,8 +39,8 @@ export default function PaymentPage() {
 
   const handlePay = async () => {
     const payAmount = parseFloat(amount);
-    if (!payAmount || payAmount <= 0) return toast.error('Enter a valid amount');
-    if (payAmount > remaining) return toast.error('Amount exceeds remaining balance');
+    if (!payAmount || payAmount <= 0) return toast.error('Please enter a valid amount');
+    if (payAmount > remaining) return toast.error('Amount exceeds the remaining balance');
 
     setPaying(true);
     try {
@@ -60,182 +60,188 @@ export default function PaymentPage() {
   };
 
   if (loading) return (
-    <div className={`min-h-screen pt-20 p-6 ${dark ? 'bg-dark-900' : 'bg-gray-50'}`}>
-      <div className="max-w-3xl mx-auto"><LoadingSkeleton lines={6} /></div>
+    <div className="min-h-screen flex items-center justify-center bg-surface font-black text-primary uppercase tracking-widest">
+       Loading Payment Portal...
     </div>
   );
 
   return (
-    <div className={`min-h-screen pt-20 ${dark ? 'bg-dark-900' : 'bg-gray-50'}`}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className={`text-3xl font-display font-bold mb-2 ${dark ? 'text-white' : 'text-gray-900'}`}>Payment</h1>
-          <p className={dark ? 'text-white/50' : 'text-gray-500'}>Complete your booking payment</p>
-        </motion.div>
+    <div className="min-h-screen flex bg-surface">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <Navbar />
+        <main className="flex-1 p-10 lg:ml-72 pt-32 overflow-y-auto">
+          <div className="max-w-4xl mx-auto space-y-10">
+            
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+               <div className="flex items-center gap-4 mb-2">
+                  <FiActivity className="text-secondary" size={24} />
+                  <h1 className="text-4xl font-black text-primary font-headline tracking-tighter leading-none">
+                     Make <span className="text-secondary italic">Payment</span>
+                  </h1>
+               </div>
+               <p className="text-on-surface-variant font-medium tracking-tight">Booking ID: #BK-{bookingId}</p>
+            </motion.div>
 
-        {/* Booking Info */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-6">
-          <GlassCard>
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center text-2xl">
-                  {booking?.Court?.Sport?.icon || '🏟️'}
-                </div>
-                <div>
-                  <h3 className={`font-semibold text-lg ${dark ? 'text-white' : 'text-gray-900'}`}>
-                    {booking?.Court?.Sport?.name} - {booking?.Court?.name}
-                  </h3>
-                  <p className={`text-sm ${dark ? 'text-white/50' : 'text-gray-500'}`}>
-                    {booking?.date} • {booking?.time_slot}
-                  </p>
-                </div>
-              </div>
-              <Badge variant={booking?.status}>{booking?.status}</Badge>
-            </div>
-          </GlassCard>
-        </motion.div>
-
-        {/* Payment Progress */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-6">
-          <GlassCard>
-            <h2 className={`text-lg font-semibold mb-4 ${dark ? 'text-white' : 'text-gray-900'}`}>
-              Payment Progress
-            </h2>
-
-            {/* Progress Bar */}
-            <div className={`relative h-4 rounded-full overflow-hidden ${dark ? 'bg-white/10' : 'bg-gray-200'}`}>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-                className="h-full gradient-primary rounded-full"
-              />
-              {/* 50% marker */}
-              <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white/50"></div>
-            </div>
-
-            <div className="flex items-center justify-between mt-2">
-              <span className={`text-xs ${dark ? 'text-white/40' : 'text-gray-400'}`}>₹0</span>
-              <span className={`text-xs ${dark ? 'text-white/40' : 'text-gray-400'}`}>50% (₹{minAdvance})</span>
-              <span className={`text-xs ${dark ? 'text-white/40' : 'text-gray-400'}`}>₹{totalAmount}</span>
-            </div>
-
-            {/* Status Steps */}
-            <div className="flex items-center justify-between mt-6">
-              <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  totalPaid > 0 ? 'gradient-primary text-white' : dark ? 'bg-white/10 text-white/30' : 'bg-gray-200 text-gray-400'
-                }`}>
-                  {totalPaid > 0 ? <FiCheck /> : '1'}
-                </div>
-                <span className={`text-sm ${dark ? 'text-white/70' : 'text-gray-600'}`}>Payment Made</span>
-              </div>
-              <div className={`flex-1 h-0.5 mx-3 ${totalPaid >= minAdvance ? 'gradient-primary' : dark ? 'bg-white/10' : 'bg-gray-200'}`}></div>
-              <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  booking?.status === 'Confirmed' || booking?.status === 'Completed' ? 'gradient-primary text-white' : dark ? 'bg-white/10 text-white/30' : 'bg-gray-200 text-gray-400'
-                }`}>
-                  {booking?.status === 'Confirmed' || booking?.status === 'Completed' ? <FiCheck /> : '2'}
-                </div>
-                <span className={`text-sm ${dark ? 'text-white/70' : 'text-gray-600'}`}>Confirmed</span>
-              </div>
-              <div className={`flex-1 h-0.5 mx-3 ${totalPaid >= totalAmount ? 'gradient-primary' : dark ? 'bg-white/10' : 'bg-gray-200'}`}></div>
-              <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                  totalPaid >= totalAmount ? 'gradient-primary text-white' : dark ? 'bg-white/10 text-white/30' : 'bg-gray-200 text-gray-400'
-                }`}>
-                  {totalPaid >= totalAmount ? <FiCheck /> : '3'}
-                </div>
-                <span className={`text-sm ${dark ? 'text-white/70' : 'text-gray-600'}`}>Fully Paid</span>
-              </div>
-            </div>
-
-            {/* Amounts */}
-            <div className={`grid grid-cols-3 gap-4 mt-6 pt-4 border-t ${dark ? 'border-white/10' : 'border-gray-200'}`}>
-              <div className="text-center">
-                <p className={`text-sm ${dark ? 'text-white/50' : 'text-gray-500'}`}>Total</p>
-                <p className={`text-xl font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>₹{totalAmount}</p>
-              </div>
-              <div className="text-center">
-                <p className={`text-sm ${dark ? 'text-white/50' : 'text-gray-500'}`}>Paid</p>
-                <p className="text-xl font-bold text-green-400">₹{totalPaid}</p>
-              </div>
-              <div className="text-center">
-                <p className={`text-sm ${dark ? 'text-white/50' : 'text-gray-500'}`}>Remaining</p>
-                <p className="text-xl font-bold text-amber-400">₹{remaining}</p>
-              </div>
-            </div>
-          </GlassCard>
-        </motion.div>
-
-        {/* Make Payment */}
-        {remaining > 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6">
-            <GlassCard>
-              <h2 className={`text-lg font-semibold mb-4 flex items-center gap-2 ${dark ? 'text-white' : 'text-gray-900'}`}>
-                <FiDollarSign /> Make Payment
-              </h2>
-
-              <div className="flex gap-2 mb-4">
-                {[minAdvance, remaining].filter((v, i, a) => a.indexOf(v) === i && v > 0).map(preset => (
-                  <button key={preset} onClick={() => setAmount(String(preset))}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                      amount === String(preset)
-                        ? 'gradient-primary text-white'
-                        : dark ? 'bg-white/5 text-white/70 hover:bg-white/10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    ₹{preset} {preset === minAdvance && totalPaid < minAdvance ? '(50% Advance)' : preset === remaining ? '(Full)' : ''}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex gap-3">
-                <input
-                  type="number" value={amount}
-                  onChange={e => setAmount(e.target.value)}
-                  placeholder={`Enter amount (min ₹1)`}
-                  max={remaining}
-                  className={`flex-1 ${dark ? 'input-glass' : 'input-light'}`}
-                />
-                <button onClick={handlePay} disabled={paying} className="btn-primary">
-                  {paying ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Pay'}
-                </button>
-              </div>
-            </GlassCard>
-          </motion.div>
-        )}
-
-        {/* Payment History */}
-        {paymentsList.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-6">
-            <GlassCard>
-              <h2 className={`text-lg font-semibold mb-4 ${dark ? 'text-white' : 'text-gray-900'}`}>Payment History</h2>
-              <div className="space-y-2">
-                {paymentsList.map(p => (
-                  <div key={p.id} className={`flex items-center justify-between p-3 rounded-xl ${dark ? 'bg-white/5' : 'bg-gray-50'}`}>
+            {/* Booking Summary */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <GlassCard className="p-8 border border-outline-variant/10 bg-surface-container-low">
+                <div className="flex items-center justify-between flex-wrap gap-6">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-2xl gold-accent-gradient flex items-center justify-center text-3xl shadow-lg">
+                      {booking?.Court?.Sport?.icon || '🏟️'}
+                    </div>
                     <div>
-                      <p className={`font-medium text-sm ${dark ? 'text-white' : 'text-gray-900'}`}>₹{p.amount_paid}</p>
-                      <p className={`text-xs ${dark ? 'text-white/40' : 'text-gray-500'}`}>
-                        {new Date(p.payment_date).toLocaleString()}
+                      <h3 className="text-xl font-black text-primary font-headline tracking-tight">
+                        {booking?.Court?.Sport?.name} • {booking?.Court?.name}
+                      </h3>
+                      <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mt-1">
+                        Date: {booking?.date} • Time: {booking?.time_slot}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant={p.payment_type === 'Full' ? 'success' : 'info'}>{p.payment_type}</Badge>
-                      <Badge variant={p.payment_status === 'Success' ? 'success' : 'danger'}>{p.payment_status}</Badge>
-                    </div>
                   </div>
-                ))}
-              </div>
-            </GlassCard>
-          </motion.div>
-        )}
+                  <Badge variant={booking?.status}>{booking?.status}</Badge>
+                </div>
+              </GlassCard>
+            </motion.div>
 
-        <div className="mt-6 text-center">
-          <button onClick={() => navigate('/bookings')} className={`text-sm font-medium ${dark ? 'text-white/50 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>
-            ← Back to Bookings
-          </button>
-        </div>
+            {/* Payment Progress */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <GlassCard className="p-10 border border-outline-variant/10 bg-surface-container-low shadow-xl">
+                <h2 className="text-xl font-black text-primary font-headline tracking-tighter mb-8 uppercase tracking-widest">
+                  Payment Progress
+                </h2>
+
+                <div className="relative h-6 rounded-3xl overflow-hidden bg-surface-container shadow-inner border border-outline-variant/5">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progressPercent}%` }}
+                    transition={{ duration: 1.5, ease: 'circOut' }}
+                    className="h-full gold-accent-gradient rounded-3xl"
+                  />
+                  {/* 50% marker */}
+                  <div className="absolute top-0 left-1/2 w-0.5 h-full bg-primary/20"></div>
+                </div>
+
+                <div className="flex items-center justify-between mt-4">
+                   <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40">Start</span>
+                   <span className="text-[9px] font-black uppercase tracking-widest text-secondary">50% Advance</span>
+                   <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40">Complete</span>
+                </div>
+
+                {/* Status Steps */}
+                <div className="flex items-center justify-between mt-12 relative">
+                   <div className="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container -translate-y-1/2 z-0"></div>
+                  {[
+                    { label: 'Pending', condition: totalPaid >= 0 },
+                    { label: 'Advance Paid', condition: totalPaid >= minAdvance },
+                    { label: 'Fully Settled', condition: totalPaid >= totalAmount }
+                  ].map((step, i) => (
+                    <div key={i} className="relative z-10 flex flex-col items-center gap-3">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm transition-all duration-500 border-2 ${
+                        step.condition ? 'gold-accent-gradient border-primary text-primary shadow-lg scale-110' : 'bg-surface border-outline-variant/10 text-on-surface-variant/20'
+                      }`}>
+                        {step.condition ? <FiCheck size={20} /> : i + 1}
+                      </div>
+                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${step.condition ? 'text-primary' : 'text-on-surface-variant/20'}`}>
+                        {step.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-3 gap-8 mt-12 pt-10 border-t border-outline-variant/10">
+                  <div className="text-center">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mb-1">Total Amount</p>
+                    <p className="text-2xl font-black text-primary font-headline tracking-tighter leading-none">₹{totalAmount}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-secondary mb-1">Paid So Far</p>
+                    <p className="text-2xl font-black text-secondary font-headline tracking-tighter leading-none">₹{totalPaid}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mb-1">Remaining Balance</p>
+                    <p className="text-2xl font-black text-primary font-headline tracking-tighter leading-none opacity-40">₹{remaining}</p>
+                  </div>
+                </div>
+              </GlassCard>
+            </motion.div>
+
+            {/* Payment Action */}
+            {remaining > 0 && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                <GlassCard className="p-8 border-2 border-primary shadow-2xl bg-surface-container-lowest">
+                  <h2 className="text-xl font-black text-primary font-headline tracking-tighter mb-8 flex items-center gap-3">
+                    <FiDollarSign className="text-secondary" /> Make a Payment
+                  </h2>
+
+                  <div className="flex gap-4 mb-8">
+                    {[minAdvance, remaining].filter((v, i, a) => a.indexOf(v) === i && v > 0).map(preset => (
+                      <button key={preset} onClick={() => setAmount(String(preset))}
+                        className={`flex-1 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all border-2 ${
+                          amount === String(preset)
+                            ? 'gold-accent-gradient border-primary text-primary shadow-lg scale-[1.02]'
+                            : 'bg-surface-container-low border-outline-variant/10 text-on-surface-variant hover:border-secondary/30'
+                        }`}
+                      >
+                        ₹{preset} {preset === minAdvance && totalPaid < minAdvance ? '(Advance)' : preset === remaining ? '(Full Pay)' : ''}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-4">
+                    <Input
+                      type="number" value={amount}
+                      onChange={e => setAmount(e.target.value)}
+                      placeholder={`Enter amount (max ₹${remaining})`}
+                      max={remaining}
+                      className="flex-1"
+                    />
+                    <Button onClick={handlePay} disabled={paying} variant="primary" className="px-12">
+                      {paying ? <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div> : 'Pay Now'}
+                    </Button>
+                  </div>
+                </GlassCard>
+              </motion.div>
+            )}
+
+            {/* History */}
+            {paymentsList.length > 0 && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                <GlassCard className="p-8 border border-outline-variant/10 bg-surface-container-low">
+                  <h2 className="text-xl font-black text-primary font-headline tracking-tighter mb-6 uppercase tracking-widest">Transaction History</h2>
+                  <div className="space-y-3">
+                    {paymentsList.map(p => (
+                      <div key={p.id} className="flex items-center justify-between p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/5 hover:border-secondary/20 transition-all group">
+                        <div className="flex items-center gap-6">
+                           <div className="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary group-hover:gold-accent-gradient group-hover:text-primary transition-all">
+                              <FiCheck size={20} />
+                           </div>
+                           <div>
+                             <p className="text-lg font-black text-primary font-headline tracking-tight leading-none">₹{p.amount_paid}</p>
+                             <p className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">
+                               Date: {new Date(p.payment_date).toLocaleString()}
+                             </p>
+                           </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant={p.payment_type === 'Full' ? 'success' : 'info'}>{p.payment_type}</Badge>
+                          <Badge variant={p.payment_status === 'Success' ? 'success' : 'danger'}>{p.payment_status}</Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </GlassCard>
+              </motion.div>
+            )}
+
+            <div className="pt-10 text-center">
+              <button onClick={() => navigate('/bookings')} className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 hover:text-secondary transition-colors group">
+                <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" /> Back to My Bookings
+              </button>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );

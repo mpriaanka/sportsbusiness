@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { sports as sportsAPI, bookings as bookingsAPI } from '../api';
-import { GlassCard, Badge, EmptyState, LoadingSkeleton } from '../components/UI';
-import { FiCalendar, FiClock, FiArrowRight } from 'react-icons/fi';
+import { GlassCard, Badge, Button } from '../components/UI';
+import { FiCalendar, FiClock, FiArrowRight, FiActivity } from 'react-icons/fi';
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
 export default function ClientDashboard() {
-  const { dark } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [sportsList, setSportsList] = useState([]);
@@ -26,99 +26,124 @@ export default function ClientDashboard() {
   }, []);
 
   if (loading) return (
-    <div className={`min-h-screen pt-20 p-6 ${dark ? 'bg-dark-900' : 'bg-gray-50'}`}>
-      <div className="max-w-7xl mx-auto"><LoadingSkeleton lines={6} /></div>
+    <div className="min-h-screen flex items-center justify-center bg-surface font-black text-primary">
+       Loading your dashboard...
     </div>
   );
 
   return (
-    <div className={`min-h-screen pt-20 ${dark ? 'bg-dark-900' : 'bg-gray-50'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className={`text-3xl font-display font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>
-            Welcome back, <span className="text-gradient">{user?.name}</span> 👋
-          </h1>
-          <p className={`mt-2 ${dark ? 'text-white/50' : 'text-gray-500'}`}>
-            Browse sports and book your favourite court
-          </p>
-        </motion.div>
-
-        {/* Sports Grid */}
-        <div className="mt-8">
-          <h2 className={`text-xl font-semibold mb-4 ${dark ? 'text-white' : 'text-gray-900'}`}>Browse Sports</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {sportsList.map((sport, i) => (
-              <motion.div
-                key={sport.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <GlassCard hover onClick={() => navigate(`/book/${sport.id}`)}>
-                  <div className="text-center">
-                    <span className="text-4xl block mb-3">{sport.icon}</span>
-                    <h3 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>{sport.name}</h3>
-                    <p className={`text-sm mt-1 ${dark ? 'text-white/50' : 'text-gray-500'}`}>
-                      {sport.Courts?.length || 0} courts
-                    </p>
-                    <div className="mt-3 flex items-center justify-center gap-1 text-primary-400 text-sm font-medium">
-                      Book Now <FiArrowRight size={14} />
-                    </div>
+    <div className="min-h-screen flex bg-surface">
+      <Sidebar />
+      <div className="flex-1 flex flex-col min-w-0">
+        <Navbar />
+        <main className="flex-1 p-10 lg:ml-72 pt-32 overflow-y-auto">
+          <div className="max-w-7xl mx-auto space-y-12">
+            
+            {/* Header */}
+            <motion.div 
+               initial={{ opacity: 0, y: 20 }} 
+               animate={{ opacity: 1, y: 0 }}
+               className="flex flex-col md:flex-row justify-between items-end gap-6"
+            >
+               <div>
+                  <h1 className="text-4xl font-black text-primary font-headline tracking-tighter leading-none mb-2">
+                    Welcome, <span className="text-secondary italic">{user?.name}</span>
+                  </h1>
+                  <p className="text-on-surface-variant font-medium tracking-tight">Active Athlete at ProStar Academy</p>
+               </div>
+               <div className="flex items-center gap-4">
+                  <div className="text-right">
+                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Member ID</p>
+                     <p className="text-sm font-bold text-primary tracking-widest">#ID-{user?.id || '000'}</p>
                   </div>
+                  <div className="w-12 h-12 rounded-2xl gold-accent-gradient shadow-lg flex items-center justify-center text-primary">
+                     <FiActivity size={24} />
+                  </div>
+               </div>
+            </motion.div>
+
+            {/* Sports Selection */}
+            <section className="space-y-6">
+              <div className="flex justify-between items-end">
+                 <h2 className="text-2xl font-black text-primary font-headline tracking-tighter">Available Sports</h2>
+                 <p className="text-[10px] font-black uppercase tracking-widest text-secondary">Select to Book Now</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {sportsList.map((sport, i) => (
+                   <motion.div
+                    key={sport.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="cursor-pointer"
+                    onClick={() => navigate(`/book/${sport.id}`)}
+                  >
+                    <GlassCard className="p-8 border border-outline-variant/10 bg-surface-container-low text-center group">
+                      <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center text-3xl mx-auto mb-6 group-hover:gold-accent-gradient transition-all">
+                        {sport.icon}
+                      </div>
+                      <h3 className="font-black text-primary font-headline tracking-tight text-xl mb-1">{sport.name}</h3>
+                      <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest">
+                        {sport.Courts?.length || 0} Courts Available
+                      </p>
+                      <div className="mt-6 pt-6 border-t border-outline-variant/5">
+                        <span className="text-secondary font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
+                           Book Now <FiArrowRight size={14} />
+                        </span>
+                      </div>
+                    </GlassCard>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* Recent Activity */}
+            <section className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-black text-primary font-headline tracking-tighter">Recent Bookings</h2>
+                <Button variant="outline" onClick={() => navigate('/bookings')} className="text-[10px] font-black uppercase tracking-widest px-6">
+                  View All History <FiArrowRight className="ml-2" />
+                </Button>
+              </div>
+
+              {recentBookings.length === 0 ? (
+                <GlassCard className="p-12 border border-dashed border-outline-variant/30 text-center">
+                   <p className="text-on-surface-variant font-medium">You haven't made any bookings yet. Start by selecting a sport above.</p>
                 </GlassCard>
-              </motion.div>
-            ))}
+              ) : (
+                <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/10 overflow-hidden">
+                   <table className="w-full text-left">
+                      <thead>
+                         <tr className="bg-surface-container-low/50">
+                            <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Sport / Court</th>
+                            <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Date & Time</th>
+                            <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Amount</th>
+                            <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Status</th>
+                         </tr>
+                      </thead>
+                      <tbody className="divide-y divide-surface-container">
+                        {recentBookings.map((booking, i) => (
+                           <tr key={booking.id} className="hover:bg-surface-container-low transition-colors group">
+                              <td className="px-8 py-6">
+                                 <p className="font-bold text-primary text-sm">{booking.Court?.Sport?.name}</p>
+                                 <p className="text-[10px] text-secondary font-black uppercase tracking-widest">{booking.Court?.name}</p>
+                              </td>
+                              <td className="px-8 py-6">
+                                 <p className="text-sm font-bold text-primary">{booking.date}</p>
+                                 <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">{booking.time_slot}</p>
+                              </td>
+                              <td className="px-8 py-6 font-black text-primary text-sm">₹{booking.total_amount}</td>
+                              <td className="px-8 py-6"><Badge variant={booking.status}>{booking.status}</Badge></td>
+                           </tr>
+                        ))}
+                      </tbody>
+                   </table>
+                </div>
+              )}
+            </section>
           </div>
-        </div>
-
-        {/* Recent Bookings */}
-        <div className="mt-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className={`text-xl font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>Recent Bookings</h2>
-            <button onClick={() => navigate('/bookings')} className="text-primary-400 text-sm font-medium flex items-center gap-1">
-              View All <FiArrowRight size={14} />
-            </button>
-          </div>
-
-          {recentBookings.length === 0 ? (
-            <EmptyState icon="📅" title="No bookings yet" message="Browse sports above and book your first session!" />
-          ) : (
-            <div className="space-y-3">
-              {recentBookings.map((booking, i) => (
-                <motion.div
-                  key={booking.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <GlassCard>
-                    <div className="flex items-center justify-between flex-wrap gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl gradient-primary flex items-center justify-center text-xl`}>
-                          {booking.Court?.Sport?.icon || '🏟️'}
-                        </div>
-                        <div>
-                          <h3 className={`font-semibold ${dark ? 'text-white' : 'text-gray-900'}`}>
-                            {booking.Court?.Sport?.name} - {booking.Court?.name}
-                          </h3>
-                          <div className={`flex items-center gap-3 text-sm mt-1 ${dark ? 'text-white/50' : 'text-gray-500'}`}>
-                            <span className="flex items-center gap-1"><FiCalendar size={12} /> {booking.date}</span>
-                            <span className="flex items-center gap-1"><FiClock size={12} /> {booking.time_slot}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className={`font-bold ${dark ? 'text-white' : 'text-gray-900'}`}>₹{booking.total_amount}</span>
-                        <Badge variant={booking.status}>{booking.status}</Badge>
-                      </div>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -5,21 +5,16 @@ const ThemeContext = createContext(null);
 export const useTheme = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }) {
-  const [dark, setDark] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    return saved ? saved === 'dark' : true;
-  });
+  // Mixed theme doesn't use a global toggle
+  const dark = false;
 
   useEffect(() => {
-    localStorage.setItem('theme', dark ? 'dark' : 'light');
-    if (dark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [dark]);
+    document.documentElement.classList.remove('dark');
+  }, []);
 
-  const toggle = () => setDark(prev => !prev);
+  const toggle = () => {
+    // Theme toggle disabled
+  };
 
   return (
     <ThemeContext.Provider value={{ dark, toggle }}>
