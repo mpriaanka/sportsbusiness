@@ -7,7 +7,7 @@ const Schedule = sequelize.define('Schedule', {
   court_id: { type: DataTypes.INTEGER, allowNull: false },
   manager_id: { type: DataTypes.INTEGER },
   day_of_week: {
-    type: DataTypes.ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+    type: DataTypes.STRING,
     allowNull: false
   },
   start_time: { type: DataTypes.STRING, allowNull: false },

@@ -6,11 +6,11 @@ const Payment = sequelize.define('Payment', {
   booking_id: { type: DataTypes.INTEGER, allowNull: false },
   amount_paid: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
   payment_type: {
-    type: DataTypes.ENUM('Advance', 'Final', 'Full'),
+    type: DataTypes.STRING,
     allowNull: false
   },
   payment_status: {
-    type: DataTypes.ENUM('Success', 'Failed', 'Pending'),
+    type: DataTypes.STRING,
     defaultValue: 'Pending'
   },
   payment_date: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }

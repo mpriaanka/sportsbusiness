@@ -8,8 +8,14 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: 'postgres',
+    dialect: 'mssql',
     logging: false,
+    dialectOptions: {
+      options: {
+        encrypt: true,
+        trustServerCertificate: true
+      }
+    },
     pool: {
       max: 5,
       min: 0,

@@ -9,7 +9,7 @@ const Admission = sequelize.define('Admission', {
   start_date: { type: DataTypes.DATEONLY, allowNull: false },
   end_date: { type: DataTypes.DATEONLY },
   status: {
-    type: DataTypes.ENUM('Active', 'Expired', 'Cancelled'),
+    type: DataTypes.STRING,
     defaultValue: 'Active'
   }
 }, { tableName: 'admissions', timestamps: true });

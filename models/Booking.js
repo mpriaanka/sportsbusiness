@@ -10,7 +10,7 @@ const Booking = sequelize.define('Booking', {
   time_slot: { type: DataTypes.STRING, allowNull: false },
   total_amount: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
   status: {
-    type: DataTypes.ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed'),
+    type: DataTypes.STRING,
     defaultValue: 'Pending'
   },
   notes: { type: DataTypes.TEXT }
