@@ -6,9 +6,13 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: true,
-    allowedHosts: ['proacademy'],
+    allowedHosts: ['proacademy', 'prostaracademy'],
     proxy: {
-      '/api': 'http://localhost:5000'
+      '/api': {
+        target: 'https://proacademy-api.loca.lt',
+        changeOrigin: true,
+        secure: false
+      }
     }
   }
 })
