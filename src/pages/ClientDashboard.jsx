@@ -49,7 +49,7 @@ export default function ClientDashboard() {
                   <h1 className="text-4xl font-black text-primary font-headline tracking-tighter leading-none mb-2">
                     Welcome, <span className="text-secondary italic">{user?.name}</span>
                   </h1>
-                  <p className="text-on-surface-variant font-medium tracking-tight">Active Athlete at ProStar Academy</p>
+                  <p className="text-on-surface-variant font-medium tracking-tight">Active Athlete at ProAcademy</p>
                </div>
                <div className="flex items-center gap-4">
                   <div className="text-right">

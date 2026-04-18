@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+console.log('%c🚀 ProAcademy is live at http://ProAcademy:5173', 'color: #D4AF37; font-weight: bold; font-size: 16px;');
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />

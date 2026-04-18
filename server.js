@@ -41,7 +41,7 @@ const start = async () => {
     await sequelize.sync({ alter: true });
     console.log('✅ Models synced');
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Server running on http://ProAcademy:${PORT}`);
     });
   } catch (err) {
     console.error('❌ Failed to start server:', err);
