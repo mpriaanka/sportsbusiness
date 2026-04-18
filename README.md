@@ -45,7 +45,7 @@ npm run dev
 ```
 
 ### 4. Open the app
-Navigate to `http://ProAcademy:5173`
+Navigate to `http://ProStarAcademy:5173`
 
 ## Demo Accounts
 

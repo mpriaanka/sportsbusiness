@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: true,
-    allowedHosts: ['proacademy', 'prostaracademy'],
+    allowedHosts: ['prostaracademy', 'proacademy'],
     proxy: {
       '/api': {
         target: 'https://proacademy-api.loca.lt',

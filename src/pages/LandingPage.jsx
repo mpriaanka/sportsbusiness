@@ -50,7 +50,7 @@ export default function LandingPage() {
              transition={{ duration: 0.8, delay: 0.2 }}
              className="text-6xl md:text-8xl font-black text-white font-headline tracking-tighter leading-[0.9] mb-8"
            >
-             Pro<br/>
+             ProStar Sports <br/>
              <span className="text-secondary italic">Academy</span>
            </motion.h1>
 
@@ -174,10 +174,10 @@ export default function LandingPage() {
          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-3">
                <div className="w-10 h-10 premium-gradient rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/30">P</div>
-               <span className="text-xl font-black text-primary font-headline tracking-tight">ProAcademy</span>
+               <span className="text-xl font-black text-primary font-headline tracking-tight">ProStar Academy</span>
             </div>
             <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">
-               © 2026 ProAcademy • Established 1998
+               © 2024 ProStar Sports Academy • Established 1998
             </p>
          </div>
       </footer>
