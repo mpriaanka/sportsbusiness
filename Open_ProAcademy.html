@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Opening ProAcademy...</title>
+    <meta http-equiv="refresh" content="0; url=http://localhost:5173">
+    <style>
+        body {
+            background: #001e21;
+            color: #D4AF37;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .loader {
+            border: 4px solid rgba(212, 175, 55, 0.1);
+            border-top: 4px solid #D4AF37;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1 { font-weight: 800; letter-spacing: -0.05em; }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <h1>PROACADEMY</h1>
+    <p>Connecting to your local instance...</p>
+</body>
+</html>
