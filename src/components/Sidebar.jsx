@@ -68,8 +68,12 @@ export default function Sidebar() {
                 }`
               }
             >
-              <Icon className={`text-xl transition-colors duration-300 ${isActive ? 'text-secondary' : 'group-hover:text-white'}`} />
-              <span className="text-sm">{label}</span>
+              {({ isActive }) => (
+                <>
+                  <Icon className={`text-xl transition-colors duration-300 ${isActive ? 'text-secondary' : 'group-hover:text-white'}`} />
+                  <span className="text-sm">{label}</span>
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
