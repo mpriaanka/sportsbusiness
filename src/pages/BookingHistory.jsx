@@ -109,7 +109,7 @@ export default function BookingHistory() {
 
                         <div className="flex items-center gap-4">
                            <Badge variant={b.status}>{b.status}</Badge>
-                           {(b.status === 'Pending' || b.status === 'Confirmed') && (
+                           {b.status === 'Pending' && (
                              <div className="flex items-center gap-3 pl-6 border-l border-outline-variant/10">
                                <Button onClick={() => navigate(`/payment/${b.id}`)} variant="primary" className="!py-2 !px-6 text-[10px]">
                                  Pay Now

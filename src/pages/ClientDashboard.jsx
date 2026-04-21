@@ -120,6 +120,7 @@ export default function ClientDashboard() {
                             <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Date & Time</th>
                             <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Amount</th>
                             <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Status</th>
+                            <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant text-right">Payment</th>
                          </tr>
                       </thead>
                       <tbody className="divide-y divide-surface-container">
@@ -135,6 +136,16 @@ export default function ClientDashboard() {
                               </td>
                               <td className="px-8 py-6 font-black text-primary text-sm">₹{booking.total_amount}</td>
                               <td className="px-8 py-6"><Badge variant={booking.status}>{booking.status}</Badge></td>
+                              <td className="px-8 py-6 text-right">
+                                 {booking.status === 'Pending' && (
+                                   <button 
+                                     onClick={() => navigate(`/payment/${booking.id}`)}
+                                     className="px-4 py-2 bg-secondary text-primary font-black text-[10px] uppercase tracking-widest rounded-lg hover:bg-primary hover:text-secondary transition-all"
+                                   >
+                                     Pay Now
+                                   </button>
+                                 )}
+                              </td>
                            </tr>
                         ))}
                       </tbody>

@@ -28,38 +28,39 @@ const seed = async () => {
     // Sports
     const football = await Sport.create({ name: 'Football', description: 'Join exciting football matches on our premium turf grounds.', icon: '⚽', academy_id: academy.id });
     const cricket = await Sport.create({ name: 'Cricket', description: 'Practice and play cricket on our well-maintained pitches.', icon: '🏏', academy_id: academy.id });
-    const tennis = await Sport.create({ name: 'Tennis', description: 'Experience professional tennis on our synthetic and clay courts.', icon: '🎾', academy_id: academy.id });
     const badminton = await Sport.create({ name: 'Badminton', description: 'Play badminton in our air-conditioned indoor arena.', icon: '🏸', academy_id: academy.id });
-    const basketball = await Sport.create({ name: 'Basketball', description: 'Shoot hoops on our professional basketball courts.', icon: '🏀', academy_id: academy.id });
+    const pickleball = await Sport.create({ name: 'Pickleball', description: 'Enjoy the fast-growing sport of pickleball on our elite courts.', icon: '🏓', academy_id: academy.id });
 
-    // Courts (min 2 per sport)
-    const fc1 = await Court.create({ name: 'Turf Ground A', sport_id: football.id, location: 'Block A', price_per_hour: 1500 });
-    const fc2 = await Court.create({ name: 'Turf Ground B', sport_id: football.id, location: 'Block A', price_per_hour: 1200 });
-    const cc1 = await Court.create({ name: 'Cricket Pitch 1', sport_id: cricket.id, location: 'Block B', price_per_hour: 2000 });
-    const cc2 = await Court.create({ name: 'Cricket Pitch 2', sport_id: cricket.id, location: 'Block B', price_per_hour: 1800 });
-    const tc1 = await Court.create({ name: 'Tennis Court 1', sport_id: tennis.id, location: 'Block C', price_per_hour: 800 });
-    const tc2 = await Court.create({ name: 'Tennis Court 2', sport_id: tennis.id, location: 'Block C', price_per_hour: 800 });
+    // Courts (2 per sport)
+    const fc1 = await Court.create({ name: 'Football Turf A', sport_id: football.id, location: 'Zone Alpha', price_per_hour: 1500 });
+    const fc2 = await Court.create({ name: 'Football Turf B', sport_id: football.id, location: 'Zone Alpha', price_per_hour: 1200 });
+    const cc1 = await Court.create({ name: 'Cricket Pitch 1', sport_id: cricket.id, location: 'Zone Beta', price_per_hour: 2000 });
+    const cc2 = await Court.create({ name: 'Cricket Pitch 2', sport_id: cricket.id, location: 'Zone Beta', price_per_hour: 1800 });
     const bc1 = await Court.create({ name: 'Badminton Court 1', sport_id: badminton.id, location: 'Indoor Arena', price_per_hour: 600 });
     const bc2 = await Court.create({ name: 'Badminton Court 2', sport_id: badminton.id, location: 'Indoor Arena', price_per_hour: 600 });
-    const bk1 = await Court.create({ name: 'Basketball Court 1', sport_id: basketball.id, location: 'Block D', price_per_hour: 1000 });
-    const bk2 = await Court.create({ name: 'Basketball Court 2', sport_id: basketball.id, location: 'Block D', price_per_hour: 1000 });
+    const pb1 = await Court.create({ name: 'Pickleball Court 1', sport_id: pickleball.id, location: 'Zone Gamma', price_per_hour: 900 });
+    const pb2 = await Court.create({ name: 'Pickleball Court 2', sport_id: pickleball.id, location: 'Zone Gamma', price_per_hour: 900 });
 
-    // Equipment
-    await Equipment.create({ name: 'Football', sport_id: football.id, price: 100, description: 'Match-quality football', available_quantity: 20 });
-    await Equipment.create({ name: 'Shin Guards', sport_id: football.id, price: 50, description: 'Protective shin guards', available_quantity: 30 });
-    await Equipment.create({ name: 'Goalkeeper Gloves', sport_id: football.id, price: 150, description: 'Pro goalkeeper gloves', available_quantity: 10 });
-    await Equipment.create({ name: 'Cricket Bat', sport_id: cricket.id, price: 200, description: 'English willow bat', available_quantity: 15 });
-    await Equipment.create({ name: 'Cricket Pads', sport_id: cricket.id, price: 100, description: 'Batting leg guards', available_quantity: 20 });
-    await Equipment.create({ name: 'Cricket Helmet', sport_id: cricket.id, price: 150, description: 'Protective helmet', available_quantity: 15 });
-    await Equipment.create({ name: 'Tennis Racket', sport_id: tennis.id, price: 250, description: 'Professional racket', available_quantity: 12 });
-    await Equipment.create({ name: 'Tennis Balls (Can)', sport_id: tennis.id, price: 80, description: 'Pack of 3 balls', available_quantity: 30 });
-    await Equipment.create({ name: 'Badminton Racket', sport_id: badminton.id, price: 200, description: 'Lightweight racket', available_quantity: 20 });
-    await Equipment.create({ name: 'Shuttlecocks (Box)', sport_id: badminton.id, price: 60, description: 'Feather shuttlecocks', available_quantity: 50 });
-    await Equipment.create({ name: 'Basketball', sport_id: basketball.id, price: 120, description: 'Official size basketball', available_quantity: 15 });
+    // Equipment (Premium Selection)
+    await Equipment.create({ name: 'Pro Match Ball', sport_id: football.id, price: 120, description: 'FIFA Quality Pro match ball', available_quantity: 24 });
+    await Equipment.create({ name: 'Elite Goalie Gloves', sport_id: football.id, price: 180, description: 'Pro-grip goalkeeper gloves', available_quantity: 12 });
+    await Equipment.create({ name: 'Training Cones (Set)', sport_id: football.id, price: 40, description: 'Set of 50 agility cones', available_quantity: 10 });
+    
+    await Equipment.create({ name: 'English Willow Bat', sport_id: cricket.id, price: 450, description: 'Grade 1+ English Willow', available_quantity: 8 });
+    await Equipment.create({ name: 'Tournament Stumps', sport_id: cricket.id, price: 150, description: 'Spring-back tournament stumps', available_quantity: 6 });
+    await Equipment.create({ name: 'Carbon Fiber Helmet', sport_id: cricket.id, price: 220, description: 'Elite protection helmet', available_quantity: 12 });
+    
+    await Equipment.create({ name: 'Pro Carbon Racket', sport_id: badminton.id, price: 280, description: 'High-tension carbon fiber', available_quantity: 18 });
+    await Equipment.create({ name: 'Tournament Shuttlecocks', sport_id: badminton.id, price: 85, description: 'Grade A goose feather (Dozen)', available_quantity: 60 });
+    await Equipment.create({ name: 'Badminton Net (Pro)', sport_id: badminton.id, price: 120, description: 'Tournament grade court net', available_quantity: 4 });
+    
+    await Equipment.create({ name: 'Pro Paddle', sport_id: pickleball.id, price: 240, description: 'Graphite face pro paddle', available_quantity: 14 });
+    await Equipment.create({ name: 'Outdoor Pro Balls', sport_id: pickleball.id, price: 55, description: 'Precision weighted balls (Pack)', available_quantity: 48 });
+    await Equipment.create({ name: 'Pickleball Net System', sport_id: pickleball.id, price: 350, description: 'Portable tournament net system', available_quantity: 4 });
 
     // Schedules for all courts, all days
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const allCourts = [fc1, fc2, cc1, cc2, tc1, tc2, bc1, bc2, bk1, bk2];
+    const allCourts = [fc1, fc2, cc1, cc2, bc1, bc2, pb1, pb2];
     for (const court of allCourts) {
       for (const day of days) {
         await Schedule.create({
@@ -73,23 +74,7 @@ const seed = async () => {
       }
     }
 
-    // Sample Bookings
-    const today = new Date().toISOString().split('T')[0];
-    const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-
-    const b1 = await Booking.create({ client_id: client1.id, court_id: fc1.id, date: today, time_slot: '10:00-11:00', total_amount: 1600, status: 'Confirmed' });
-    const b2 = await Booking.create({ client_id: client2.id, court_id: tc1.id, date: today, time_slot: '14:00-15:00', total_amount: 1080, status: 'Pending' });
-    const b3 = await Booking.create({ client_id: client3.id, court_id: cc1.id, date: tomorrow, time_slot: '09:00-10:00', total_amount: 2200, status: 'Confirmed' });
-    const b4 = await Booking.create({ client_id: client1.id, court_id: bc1.id, date: tomorrow, time_slot: '16:00-17:00', total_amount: 800, status: 'Pending' });
-
-    // Sample Payments
-    await Payment.create({ booking_id: b1.id, amount_paid: 1600, payment_type: 'Full', payment_status: 'Success' });
-    await Payment.create({ booking_id: b2.id, amount_paid: 540, payment_type: 'Advance', payment_status: 'Success' });
-    await Payment.create({ booking_id: b3.id, amount_paid: 1100, payment_type: 'Advance', payment_status: 'Success' });
-
     // Sample Notifications
-    await Notification.create({ user_id: client1.id, sender_id: manager1.id, title: 'Booking Confirmed', message: 'Your football booking has been confirmed!', type: 'booking' });
-    await Notification.create({ user_id: client2.id, sender_id: manager1.id, title: 'Payment Reminder', message: 'Please complete your remaining payment for tennis court booking.', type: 'payment' });
     await Notification.create({ user_id: client1.id, sender_id: admin.id, title: 'Welcome!', message: 'Welcome to ProStar Sports Academy! Explore our sports and book your first session.', type: 'general' });
 
     console.log('✅ Seed data created successfully!');

@@ -77,18 +77,11 @@ export default function LandingPage() {
                  </Button>
                </Link>
              ) : (
-               <>
-                 <Link to="/signup">
-                   <Button variant="primary" className="px-12 py-5 text-lg rounded-2xl shadow-2xl shadow-primary/20">
-                      Get Started <FiArrowRight className="ml-2" />
-                   </Button>
-                 </Link>
-                 <Link to="/login">
-                   <Button variant="outline" className="px-12 py-5 text-lg rounded-2xl">
-                      Staff Login
-                   </Button>
-                 </Link>
-               </>
+               <Link to="/login">
+                 <Button variant="primary" className="px-12 py-5 text-lg rounded-2xl shadow-2xl shadow-primary/20">
+                    Get Started <FiArrowRight className="ml-2" />
+                 </Button>
+               </Link>
              )}
            </motion.div>
 
@@ -122,7 +115,7 @@ export default function LandingPage() {
                   <h2 className="text-4xl font-black text-primary font-headline tracking-tighter leading-none mb-6">Explore Our <br/>Facilities</h2>
                   <p className="text-on-surface-variant font-medium">Top-tier venues for every sport. Quality and performance guaranteed for every session.</p>
                </div>
-               <Link to="/signup">
+               <Link to="/login">
                  <span className="text-secondary font-black uppercase tracking-widest text-xs flex items-center gap-2 group cursor-pointer">
                     View All Facilities <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                  </span>

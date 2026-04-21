@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import { FiGrid, FiCalendar, FiUsers, FiSettings, FiBarChart2, FiActivity, FiAward, FiBell, FiPackage, FiLayers } from 'react-icons/fi';
+import { FiGrid, FiCalendar, FiUsers, FiUser, FiSettings, FiBarChart2, FiActivity, FiAward, FiBell, FiPackage, FiLayers } from 'react-icons/fi';
 
 export default function Sidebar() {
   const { user } = useAuth();
@@ -39,17 +39,16 @@ export default function Sidebar() {
           PROSTAR
         </div>
 
-        {/* User Profile */}
         <div className="flex items-center gap-4 mb-10 w-full group cursor-pointer">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full border-2 border-secondary/30 overflow-hidden bg-primary/20">
-               <span className="material-symbols-outlined absolute inset-0 flex items-center justify-center text-secondary/60">person</span>
+            <div className="w-12 h-12 rounded-full border-2 border-secondary/50 flex items-center justify-center bg-primary/40 transition-all duration-300 group-hover:border-secondary group-hover:bg-primary/60 shadow-lg">
+               <FiUser className="text-secondary text-2xl" />
             </div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-sidebar-bg rounded-full"></div>
+            <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-sidebar-bg rounded-full shadow-sm"></div>
           </div>
           <div className="flex flex-col">
-            <span className="text-white font-bold text-sm truncate max-w-[120px]">{user?.name}</span>
-            <span className="text-slate-400 text-xs truncate max-w-[120px]">{user?.role?.toUpperCase()}</span>
+            <span className="text-white font-black text-sm tracking-tight group-hover:text-secondary transition-colors duration-300">{user?.name}</span>
+            <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">{user?.role}</span>
           </div>
         </div>
 

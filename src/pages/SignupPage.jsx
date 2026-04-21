@@ -76,29 +76,12 @@ export default function SignupPage() {
                placeholder="••••••••" icon={FiLock}
             />
 
-            <div>
-               <label className="block text-xs font-bold text-secondary uppercase tracking-widest mb-4">Select Your Role</label>
-               <div className="grid grid-cols-3 gap-4">
-                 {['client', 'manager', 'admin'].map(role => (
-                   <button key={role} type="button"
-                     className={`py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border-2 ${
-                       form.role === role
-                         ? 'gold-accent-gradient border-primary text-primary shadow-lg'
-                         : 'bg-surface-container-low border-outline-variant/10 text-on-surface-variant hover:border-secondary/30'
-                     }`}
-                     onClick={() => setForm({ ...form, role })}
-                   >
-                     {role}
-                   </button>
-                 ))}
-               </div>
-            </div>
 
             <Button type="submit" disabled={loading} variant="primary" className="w-full py-5 text-lg shadow-xl shadow-primary/20 mt-6">
               {loading ? (
                 <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
               ) : (
-                <>Sign Up Now <FiArrowRight className="ml-2" /></>
+                <>Sign Up Now</>
               )}
             </Button>
           </form>

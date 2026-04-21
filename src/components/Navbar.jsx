@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { notifications as notifAPI } from '../api';
-import { FiMenu, FiBell, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiBell, FiLogOut, FiSearch } from 'react-icons/fi';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
@@ -47,12 +47,12 @@ export default function Navbar() {
 
           {/* Desktop Nav Actions */}
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center bg-surface-container-highest px-4 py-2 rounded-full">
-               <span className="material-symbols-outlined text-outline-variant mr-2 text-sm">search</span>
+            <div className="hidden md:flex items-center bg-white/50 px-5 py-2 rounded-xl border border-outline-variant/10 focus-within:border-secondary/30 transition-all duration-300 group shadow-sm">
+               <FiSearch className="text-outline-variant/60 group-focus-within:text-secondary mr-3 transition-colors" size={18} />
                <input 
                   type="text" 
-                  placeholder="Search records..." 
-                  className="bg-transparent border-none focus:ring-0 text-sm placeholder-outline-variant w-48 font-body"
+                  placeholder="search records" 
+                  className="bg-transparent border-none focus:ring-0 text-sm placeholder-outline-variant/40 w-56 font-medium text-primary"
                />
             </div>
 
@@ -78,9 +78,10 @@ export default function Navbar() {
                   <div className="h-8 w-[1px] bg-outline-variant/30"></div>
                   <button 
                     onClick={handleLogout}
-                    className="p-2 text-primary hover:text-error transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-error/10 text-error hover:bg-error hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest"
                   >
-                    <FiLogOut size={20} />
+                    <FiLogOut size={16} />
+                    <span>Logout</span>
                   </button>
                </div>
             ) : (

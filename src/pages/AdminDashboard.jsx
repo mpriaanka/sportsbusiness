@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { sports as sportsAPI, courts as courtsAPI, equipment as equipAPI, bookings as bookingsAPI, auth as authAPI } from '../api';
 import { GlassCard, StatCard, Badge, Modal, Button, Input } from '../components/UI';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
-import { Outlet, useLocation } from 'react-router-dom';
-import { FiPlus, FiEdit, FiTrash2, FiSave, FiSearch, FiShield, FiTrendingUp } from 'react-icons/fi';
+import { Outlet, useLocation, Link, useSearchParams } from 'react-router-dom';
+import { FiPlus, FiEdit, FiTrash2, FiSave, FiSearch, FiShield, FiTrendingUp, FiArrowRight, FiUsers } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 function AdminOverview() {
@@ -25,6 +25,14 @@ function AdminOverview() {
       setCounts({ sports: spRes.data.length, courts: cRes.data.length, users: uRes.data.length });
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
+
+  const [showCert, setShowCert] = useState(false);
+  const [showDraft, setShowDraft] = useState(false);
+
+  const handleSendAnnouncement = () => {
+    toast.success('Protocol Synchronized with Faculty');
+    setShowDraft(false);
+  };
 
   if (loading) return <div className="p-8 text-center text-primary font-bold">Initializing Admin Terminal...</div>;
 
@@ -78,11 +86,54 @@ function AdminOverview() {
            </div>
            <h4 className="text-primary font-black text-2xl font-headline tracking-tighter">Elite Status</h4>
            <p className="text-on-surface-variant text-sm mt-2 font-medium">Top 5% of Global Academies</p>
-           <button className="mt-6 text-secondary font-bold text-[10px] uppercase tracking-widest border-b-2 border-secondary/20 hover:border-secondary transition-all">
+           <button 
+             onClick={() => setShowCert(true)}
+             className="mt-6 text-secondary font-bold text-[10px] uppercase tracking-widest border-b-2 border-secondary/20 hover:border-secondary transition-all"
+           >
               View Certifications
            </button>
         </div>
       </section>
+
+      <Modal isOpen={showCert} onClose={() => setShowCert(false)} title="Academy Certification">
+         <div className="p-4">
+            <img 
+              src="/prostar_academy_certificate_1776756327573.png" 
+              alt="ProStar Academy Certificate" 
+              className="w-full rounded-2xl shadow-2xl border-4 border-secondary/20"
+            />
+            <p className="mt-6 text-center text-on-surface-variant text-sm font-medium">
+               Official Elite Status certification verified by Global Sports Council.
+            </p>
+         </div>
+      </Modal>
+
+      <Modal isOpen={showDraft} onClose={() => setShowDraft(false)} title="Compose Institutional Protocol">
+         <div className="p-6 space-y-6">
+            <div>
+               <label className="text-[10px] font-black uppercase tracking-widest text-secondary mb-2 block">Protocol Subject</label>
+               <input 
+                 type="text" 
+                 placeholder="Enter subject..."
+                 className="w-full bg-surface-container-low border border-outline-variant/10 rounded-xl p-4 text-sm font-bold text-primary focus:border-secondary outline-none transition-all"
+               />
+            </div>
+            <div>
+               <label className="text-[10px] font-black uppercase tracking-widest text-secondary mb-2 block">Directive Content</label>
+               <textarea 
+                 rows="5"
+                 placeholder="Enter the official academy directive..."
+                 className="w-full bg-surface-container-low border border-outline-variant/10 rounded-xl p-4 text-sm font-medium text-primary focus:border-secondary outline-none transition-all resize-none"
+               ></textarea>
+            </div>
+            <button 
+              onClick={handleSendAnnouncement}
+              className="w-full gold-accent-gradient text-primary font-black py-4 rounded-xl text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg"
+            >
+               Broadcast to All Faculty
+            </button>
+         </div>
+      </Modal>
 
       {/* System Roles */}
       <section className="space-y-6">
@@ -91,28 +142,32 @@ function AdminOverview() {
             <h2 className="text-3xl font-black text-primary tracking-tighter font-headline">System Roles</h2>
             <p className="text-on-surface-variant mt-1 text-sm font-medium">Manage access control and elite permissions</p>
           </div>
-          <button className="text-secondary font-bold text-sm hover:underline">Manage All Roles</button>
+          <Link to="/admin/managers" className="text-secondary font-bold text-sm hover:underline tracking-tight">
+            Manage All Roles
+          </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
            {[
-             { title: 'Director', desc: 'Full administrative control over faculty and finances.', icon: FiShield, count: 2 },
-             { title: 'Instructors', desc: 'Access to curriculum and student performance.', icon: FiPlus, count: 12 },
-             { title: 'Medical', desc: 'Sensitive medical records and recovery protocols.', icon: FiPlus, count: 3 },
-             { title: 'Clients', desc: 'Access to booking and personal performance.', icon: FiPlus, count: counts.users - 17 }
+             { title: 'Director', desc: 'Full administrative control over faculty and finances.', icon: FiShield, count: 2, path: '/admin/managers?filter=director' },
+             { title: 'Instructors', desc: 'Access to curriculum and student performance.', icon: FiUsers, count: 12, path: '/admin/managers?filter=instructor' },
+             { title: 'Medical', desc: 'Sensitive medical records and recovery protocols.', icon: FiShield, count: 3, path: '/admin/managers?filter=medical' },
+             { title: 'Clients', desc: 'Access to booking and personal performance.', icon: FiUsers, count: counts.users - 17, path: '/admin/managers?filter=client' }
            ].map((role, i) => (
-             <GlassCard key={i} hover className="group border border-transparent hover:border-secondary/20 p-6">
-                <div className="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center mb-6 text-primary group-hover:bg-secondary group-hover:text-primary transition-all duration-500">
-                   <role.icon size={24} />
-                </div>
-                <h3 className="font-black text-primary text-lg font-headline tracking-tight">{role.title}</h3>
-                <p className="text-on-surface-variant text-xs mt-2 leading-relaxed font-medium">{role.desc}</p>
-                <div className="mt-6 flex justify-between items-center">
-                   <div className="w-8 h-8 rounded-full bg-surface-container text-[10px] font-black flex items-center justify-center border-2 border-surface text-primary">
-                      +{role.count}
-                   </div>
-                   <FiEdit className="text-secondary opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-             </GlassCard>
+             <Link key={i} to={role.path}>
+               <GlassCard hover className="group border border-transparent hover:border-secondary/20 p-6 h-full">
+                  <div className="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center mb-6 text-primary group-hover:bg-secondary group-hover:text-primary transition-all duration-500">
+                     <role.icon size={24} />
+                  </div>
+                  <h3 className="font-black text-primary text-lg font-headline tracking-tight">{role.title}</h3>
+                  <p className="text-on-surface-variant text-xs mt-2 leading-relaxed font-medium">{role.desc}</p>
+                  <div className="mt-6 flex justify-between items-center">
+                     <div className="w-8 h-8 rounded-full bg-surface-container text-[10px] font-black flex items-center justify-center border-2 border-surface text-primary">
+                        +{role.count}
+                     </div>
+                     <FiArrowRight className="text-secondary opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-[-10px] group-hover:translate-x-0" />
+                  </div>
+               </GlassCard>
+             </Link>
            ))}
         </div>
       </section>
@@ -123,45 +178,35 @@ function AdminOverview() {
           <div className="p-8 border-b border-surface-container">
             <h3 className="text-xl font-black text-primary font-headline tracking-tighter">Performance Analysis</h3>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-surface-container-low/50">
-                  <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Athlete</th>
-                  <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Status</th>
-                  <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Progress</th>
-                  <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Score</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-container">
-                {(stats?.recentBookings || []).slice(0, 5).map((b, i) => (
-                  <tr key={i} className="hover:bg-surface-container-low transition-colors group">
-                    <td className="px-8 py-6 flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">
-                        {b.client?.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-bold text-primary text-sm">{b.client?.name}</p>
-                        <p className="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">ID: #ATH-{1000 + i}</p>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                       <Badge variant={b.status === 'Confirmed' ? 'success' : 'warning'}>{b.status}</Badge>
-                    </td>
-                    <td className="px-8 py-6">
-                      <div className="w-32 h-1.5 bg-surface-container rounded-full overflow-hidden">
-                        <div className="h-full bg-primary rounded-full" style={{ width: `${70 + i * 5}%` }}></div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <span className="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-black rounded-full">
-                        {9.0 + i * 0.2}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="p-8 h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={stats?.dailyBookings || []}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                <XAxis 
+                  dataKey="date" 
+                  tick={{ fill: '#00353a', fontSize: 10, fontWeight: 700 }}
+                  tickFormatter={v => new Date(v).toLocaleDateString('en', { month: 'short', day: 'numeric' })}
+                />
+                <YAxis tick={{ fill: '#00353a', fontSize: 10, fontWeight: 700 }} />
+                <Tooltip 
+                  contentStyle={{ 
+                    borderRadius: '16px', 
+                    border: 'none', 
+                    boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                  }} 
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="count" 
+                  stroke="#D4AF37" 
+                  strokeWidth={4} 
+                  dot={{ r: 4, fill: '#D4AF37', strokeWidth: 2, stroke: '#fff' }}
+                  activeDot={{ r: 8, fill: '#00353a', stroke: '#D4AF37', strokeWidth: 2 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -172,7 +217,10 @@ function AdminOverview() {
                 <p className="text-white/60 text-sm leading-relaxed mb-8">
                   The upcoming Elite Selection process begins tomorrow. Ensure all candidate biometric logs are synchronized.
                 </p>
-                <button className="w-full py-4 bg-secondary text-primary font-black rounded-xl text-sm hover:bg-white transition-all shadow-xl">
+                <button 
+                  onClick={() => setShowDraft(true)}
+                  className="w-full py-4 bg-secondary text-primary font-black rounded-xl text-sm hover:bg-white transition-all shadow-xl"
+                >
                   Draft Announcement
                 </button>
              </div>
@@ -390,6 +438,8 @@ function AdminEquipment() {
 function AdminManagers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+  const filter = searchParams.get('filter');
 
   useEffect(() => {
     authAPI.users().then(r => setUsers(r.data)).catch(() => {}).finally(() => setLoading(false));
@@ -400,47 +450,95 @@ function AdminManagers() {
   const managers = users.filter(u => u.role === 'manager');
   const clients = users.filter(u => u.role === 'client');
 
+  if (filter === 'director') {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <h2 className="text-3xl font-black text-primary font-headline tracking-tighter text-center italic">Directorate Protocols</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+           <GlassCard className="p-8 border border-secondary/20 bg-primary/5">
+              <h3 className="text-xl font-black text-primary font-headline mb-4 flex items-center gap-2">
+                 <FiShield className="text-secondary" /> Administrative Nodes
+              </h3>
+              <p className="text-sm text-on-surface-variant font-medium leading-relaxed">
+                 All faculty nodes are currently synchronized with the central directive. 
+                 System integrity at 99.8%.
+              </p>
+           </GlassCard>
+           <GlassCard className="p-8 border border-secondary/20 bg-primary/5">
+              <h3 className="text-xl font-black text-primary font-headline mb-4 flex items-center gap-2">
+                 <FiTrendingUp className="text-secondary" /> Financial Logbook
+              </h3>
+              <p className="text-sm text-on-surface-variant font-medium leading-relaxed">
+                 Quarterly growth exceeds projections by 12.4%. All transactions are encrypted.
+              </p>
+           </GlassCard>
+        </div>
+      </div>
+    );
+  }
+
+  if (filter === 'medical') {
+    return (
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <h2 className="text-3xl font-black text-primary font-headline tracking-tighter text-center italic">Recovery & Biometrics</h2>
+        <GlassCard className="p-10 border border-secondary/20 bg-surface-container-low text-center">
+           <div className="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-6">
+              <FiPlus className="text-secondary text-4xl" />
+           </div>
+           <h3 className="text-2xl font-black text-primary font-headline mb-4">No Active Trauma Records</h3>
+           <p className="text-on-surface-variant font-medium max-w-md mx-auto">
+              All athletes are currently within optimal biometric parameters. No recovery protocols active.
+           </p>
+        </GlassCard>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-12 animate-in fade-in duration-500">
       <section>
          <h2 className="text-3xl font-black text-primary font-headline tracking-tighter mb-8 text-center">Faculty & Personnel</h2>
          <div className="grid sm:grid-cols-2 gap-8">
-            <GlassCard className="border border-outline-variant/10">
-               <h3 className="font-black text-primary text-xl font-headline tracking-tighter mb-6 flex items-center gap-3">
-                  <FiShield className="text-secondary" /> Senior Instructors ({managers.length})
-               </h3>
-               <div className="space-y-4">
-                  {managers.map(u => (
-                    <div key={u.id} className="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5">
-                       <div className="w-12 h-12 rounded-full gold-accent-gradient flex items-center justify-center text-primary font-bold shadow-lg">
-                          {u.name.charAt(0)}
-                       </div>
-                       <div>
-                          <p className="font-bold text-primary">{u.name}</p>
-                          <p className="text-[10px] text-secondary font-black uppercase tracking-widest">Instructor Status • Verified</p>
-                       </div>
-                    </div>
-                  ))}
-               </div>
-            </GlassCard>
-            <GlassCard className="border border-outline-variant/10">
-               <h3 className="font-black text-primary text-xl font-headline tracking-tighter mb-6 flex items-center gap-3">
-                  <FiSearch className="text-secondary" /> Active Athletes ({clients.length})
-               </h3>
-               <div className="space-y-4">
-                  {clients.map(u => (
-                    <div key={u.id} className="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5">
-                       <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">
-                          {u.name.charAt(0)}
-                       </div>
-                       <div>
-                          <p className="font-bold text-primary">{u.name}</p>
-                          <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">{u.email}</p>
-                       </div>
-                    </div>
-                  ))}
-               </div>
-            </GlassCard>
+            {(!filter || filter === 'instructor') && (
+              <GlassCard className="border border-outline-variant/10">
+                 <h3 className="font-black text-primary text-xl font-headline tracking-tighter mb-6 flex items-center gap-3">
+                    <FiShield className="text-secondary" /> Senior Instructors ({managers.length})
+                 </h3>
+                 <div className="space-y-4">
+                    {managers.map(u => (
+                      <div key={u.id} className="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5">
+                         <div className="w-12 h-12 rounded-full gold-accent-gradient flex items-center justify-center text-primary font-bold shadow-lg">
+                            {u.name.charAt(0)}
+                         </div>
+                         <div>
+                            <p className="font-bold text-primary">{u.name}</p>
+                            <p className="text-[10px] text-secondary font-black uppercase tracking-widest">Instructor Status • Verified</p>
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+              </GlassCard>
+            )}
+            {(!filter || filter === 'client') && (
+              <GlassCard className="border border-outline-variant/10">
+                 <h3 className="font-black text-primary text-xl font-headline tracking-tighter mb-6 flex items-center gap-3">
+                    <FiSearch className="text-secondary" /> Active Athletes ({clients.length})
+                 </h3>
+                 <div className="space-y-4">
+                    {clients.map(u => (
+                      <div key={u.id} className="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5">
+                         <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold">
+                            {u.name.charAt(0)}
+                         </div>
+                         <div>
+                            <p className="font-bold text-primary">{u.name}</p>
+                            <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">{u.email}</p>
+                         </div>
+                      </div>
+                    ))}
+                 </div>
+              </GlassCard>
+            )}
          </div>
       </section>
     </div>
@@ -508,10 +606,10 @@ function AdminAnalytics() {
     <div className="space-y-12 animate-in fade-in duration-500">
       <h2 className="text-3xl font-black text-primary font-headline tracking-tighter">Strategic Intelligence</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard icon={FiTrendingUp} title="Annual Engagement" value={stats?.totalBookings || 0} />
-        <StatCard icon={FiSearch} title="Daily Quota" value={stats?.todayBookings || 0} variant="gold" />
-        <StatCard icon={FiShield} title="Verified Nodes" value={stats?.confirmedBookings || 0} />
-        <StatCard icon={FiTrendingUp} title="Liquid Reserves" value={`₹${stats?.totalRevenue || 0}`} variant="gold" />
+        <StatCard icon={FiTrendingUp} title="Total Bookings" value={stats?.totalBookings || 0} />
+        <StatCard icon={FiSearch} title="Today's Sessions" value={stats?.todayBookings || 0} variant="gold" />
+        <StatCard icon={FiShield} title="Confirmed Paid" value={stats?.confirmedBookings || 0} />
+        <StatCard icon={FiTrendingUp} title="Total Revenue" value={`₹${stats?.totalRevenue || 0}`} variant="gold" />
       </div>
       <GlassCard className="p-10 border border-outline-variant/10">
         <h3 className="text-xl font-black text-primary font-headline tracking-tighter mb-8">Discipline Distribution</h3>

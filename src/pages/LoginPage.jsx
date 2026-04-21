@@ -46,7 +46,7 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 gold-accent-gradient rounded-3xl shadow-xl shadow-secondary/20 mb-8">
                <FiShield className="text-primary" size={36} />
             </div>
-            <h1 className="text-4xl font-black text-primary font-headline tracking-tighter mb-2">Member Login</h1>
+            <h1 className="text-4xl font-black text-primary font-headline tracking-tighter mb-2">Login</h1>
             <p className="text-on-surface-variant font-medium text-sm tracking-wide">Enter your credentials to access your account</p>
           </div>
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
               {loading ? (
                 <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
               ) : (
-                <>Login Now <FiArrowRight className="ml-2" /></>
+                <>Login Now</>
               )}
             </Button>
           </form>
@@ -87,25 +87,11 @@ export default function LoginPage() {
              </p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="mt-8 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/5">
-             <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest mb-4">Demo Credentials</p>
-             <div className="grid grid-cols-1 gap-3">
-               {[
-                 { email: 'admin@sports.com', role: 'Admin' },
-                 { email: 'manager1@sports.com', role: 'Manager' },
-                 { email: 'client1@sports.com', role: 'Athlete' },
-               ].map(acc => (
-                 <button key={acc.email}
-                   type="button"
-                   onClick={() => setForm({ email: acc.email, password: 'password123' })}
-                   className="flex items-center justify-between px-4 py-2 rounded-xl hover:bg-surface-container-low transition-colors group"
-                 >
-                   <span className="text-[10px] font-black text-primary group-hover:text-secondary transition-colors">{acc.role} Login</span>
-                   <span className="text-xs font-bold text-on-surface-variant">{acc.email}</span>
-                 </button>
-               ))}
-             </div>
+          {/* Login Note */}
+          <div className="mt-8 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/5 text-center">
+             <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest">
+               Access all features with your registered email and password
+             </p>
           </div>
         </GlassCard>
         
