@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { FiMail, FiLock, FiArrowRight, FiShield } from 'react-icons/fi';
+import { FiMail, FiLock, FiArrowRight, FiShield, FiEye, FiEyeOff } from 'react-icons/fi';
 import { GlassCard, Button, Input } from '../components/UI';
 
 export default function LoginPage() {
@@ -11,6 +11,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,10 +62,13 @@ export default function LoginPage() {
 
             <Input 
                label="Password"
-               type="password" required value={form.password}
+               type={showPassword ? 'text' : 'password'}
+               required value={form.password}
                onChange={e => setForm({ ...form, password: e.target.value })}
                placeholder="••••••••"
                icon={FiLock}
+               rightIcon={showPassword ? FiEyeOff : FiEye}
+               onRightIconClick={() => setShowPassword(!showPassword)}
             />
 
             <Button

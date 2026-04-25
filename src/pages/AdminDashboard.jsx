@@ -26,7 +26,6 @@ function AdminOverview() {
     }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
-  const [showCert, setShowCert] = useState(false);
   const [showDraft, setShowDraft] = useState(false);
 
   const handleSendAnnouncement = () => {
@@ -86,27 +85,9 @@ function AdminOverview() {
            </div>
            <h4 className="text-primary font-black text-2xl font-headline tracking-tighter">Elite Status</h4>
            <p className="text-on-surface-variant text-sm mt-2 font-medium">Top 5% of Global Academies</p>
-           <button 
-             onClick={() => setShowCert(true)}
-             className="mt-6 text-secondary font-bold text-[10px] uppercase tracking-widest border-b-2 border-secondary/20 hover:border-secondary transition-all"
-           >
-              View Certifications
-           </button>
         </div>
       </section>
 
-      <Modal isOpen={showCert} onClose={() => setShowCert(false)} title="Academy Certification">
-         <div className="p-4">
-            <img 
-              src="/prostar_academy_certificate_1776756327573.png" 
-              alt="ProStar Academy Certificate" 
-              className="w-full rounded-2xl shadow-2xl border-4 border-secondary/20"
-            />
-            <p className="mt-6 text-center text-on-surface-variant text-sm font-medium">
-               Official Elite Status certification verified by Global Sports Council.
-            </p>
-         </div>
-      </Modal>
 
       <Modal isOpen={showDraft} onClose={() => setShowDraft(false)} title="Compose Institutional Protocol">
          <div className="p-6 space-y-6">

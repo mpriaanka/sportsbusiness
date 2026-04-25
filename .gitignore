@@ -3,3 +3,7 @@ node_modules
 dist
 .DS_Store
 *.sql
+database.sqlite
+debug_*.js
+test_*.js
+verify_*.js

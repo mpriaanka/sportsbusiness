@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { sports as sportsAPI, bookings as bookingsAPI } from '../api';
-import { GlassCard, Badge, Button } from '../components/UI';
+import { GlassCard, Badge, Button, Modal } from '../components/UI';
 import { FiCalendar, FiClock, FiArrowRight, FiActivity } from 'react-icons/fi';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
@@ -14,6 +14,7 @@ export default function ClientDashboard() {
   const [sportsList, setSportsList] = useState([]);
   const [recentBookings, setRecentBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCert, setShowCert] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -56,11 +57,34 @@ export default function ClientDashboard() {
                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Member ID</p>
                      <p className="text-sm font-bold text-primary tracking-widest">#ID-{user?.id || '000'}</p>
                   </div>
-                  <div className="w-12 h-12 rounded-2xl gold-accent-gradient shadow-lg flex items-center justify-center text-primary">
+                  <button 
+                     onClick={() => setShowCert(true)}
+                     className="w-12 h-12 rounded-2xl gold-accent-gradient shadow-lg flex items-center justify-center text-primary hover:scale-110 transition-transform"
+                     title="View My Certification"
+                  >
                      <FiActivity size={24} />
-                  </div>
+                  </button>
                </div>
             </motion.div>
+
+            <Modal isOpen={showCert} onClose={() => setShowCert(false)} title="Elite Athlete Certification">
+               <div className="p-4">
+                  <img 
+                    src="/prostar_academy_certificate_1776756327573.png" 
+                    alt="ProStar Academy Certificate" 
+                    className="w-full rounded-2xl shadow-2xl border-4 border-secondary/20"
+                  />
+                  <div className="mt-8 p-6 bg-surface-container-low rounded-2xl border border-outline-variant/10">
+                     <p className="text-center text-primary font-bold text-lg font-headline tracking-tight mb-2">
+                        Official Elite Athlete Status
+                     </p>
+                     <p className="text-center text-on-surface-variant text-sm font-medium leading-relaxed">
+                        This certification verifies that you have achieved Elite Status within the ProStar Academy athletic framework. 
+                        Verified by Global Sports Council.
+                     </p>
+                  </div>
+               </div>
+            </Modal>
 
             {/* Sports Selection */}
             <section className="space-y-6">

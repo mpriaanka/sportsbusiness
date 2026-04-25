@@ -16,7 +16,7 @@ const seed = async () => {
     });
 
     // Users
-    const hashedPw = await bcrypt.hash('password123', 10);
+    const hashedPw = await bcrypt.hash('ProStar@Academy2024', 10);
 
     const admin = await User.create({ name: 'Admin User', email: 'admin@sports.com', password: hashedPw, role: 'admin', phone: '9000000001', academy_id: academy.id });
     const manager1 = await User.create({ name: 'Rahul Sharma', email: 'manager1@sports.com', password: hashedPw, role: 'manager', phone: '9000000002', academy_id: academy.id });
@@ -79,7 +79,7 @@ const seed = async () => {
 
     console.log('✅ Seed data created successfully!');
     console.log('');
-    console.log('Test Accounts (password: password123 for all):');
+    console.log('Test Accounts (password: ProStar@Academy2024 for all):');
     console.log('  Admin:   admin@sports.com');
     console.log('  Manager: manager1@sports.com / manager2@sports.com');
     console.log('  Client:  client1@sports.com / client2@sports.com / client3@sports.com');

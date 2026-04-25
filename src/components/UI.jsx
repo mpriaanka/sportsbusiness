@@ -62,7 +62,7 @@ export const Badge = ({ children, variant = 'success' }) => {
   );
 };
 
-export const Input = ({ label, icon: Icon, error, ...props }) => (
+export const Input = ({ label, icon: Icon, rightIcon: RightIcon, onRightIconClick, error, ...props }) => (
   <div className="mb-4 group">
     {label && (
       <label className="block text-xs font-bold text-secondary uppercase tracking-widest mb-3">
@@ -76,9 +76,18 @@ export const Input = ({ label, icon: Icon, error, ...props }) => (
         </div>
       )}
       <input
-        className={`w-full ${Icon ? 'pl-10' : 'px-4'} py-4 bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 transition-all font-body text-on-surface placeholder:text-on-surface-variant/30 ${error ? 'border-error' : ''}`}
+        className={`w-full ${Icon ? 'pl-10' : 'px-4'} ${RightIcon ? 'pr-10' : 'pr-4'} py-4 bg-surface-container-low border-b-2 border-outline-variant/30 focus:border-primary focus:ring-0 transition-all font-body text-on-surface placeholder:text-on-surface-variant/30 ${error ? 'border-error' : ''}`}
         {...props}
       />
+      {RightIcon && (
+        <button
+          type="button"
+          onClick={onRightIconClick}
+          className="absolute right-3 text-on-surface-variant/40 hover:text-primary transition-colors"
+        >
+          <RightIcon size={18} />
+        </button>
+      )}
     </div>
     {error && <p className="mt-1.5 text-xs text-error font-medium">{error}</p>}
   </div>
